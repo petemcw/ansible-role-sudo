@@ -1,0 +1,27 @@
+---
+- name: Configure sudo for all nodes
+  hosts: all
+  connection: local
+  roles:
+    - test_role
+  vars:
+    sudo_users:
+      - name: deploy
+        as_users:
+          - op
+        hosts:
+          - private_net
+        commands:
+          - deployment
+    sudo_command_aliases:
+      - name: deployment
+        alias: "/usr/sbin/service"
+    sudo_host_aliases:
+      - name: private_net
+        alias: "10.1.2.0/255.255.255.0"
+    sudo_user_aliases:
+      - name: operators
+        alias: admin
+    sudo_run_aliases:
+      - name: op
+        alias: root, operator
