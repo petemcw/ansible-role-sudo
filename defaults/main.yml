@@ -1,0 +1,26 @@
+---
+# The variables file used for Sudo playbooks.
+# If not overriden in inventory or as a parameter, this is the value that will be used
+
+sudo_admin_group: "sudo"
+sudo_config_file: "/etc/sudoers"
+sudo_config_path: "/etc/sudoers.d/"
+sudo_config_items: []
+sudo_users: []
+sudo_defaults:
+  - "exempt_group={{ sudo_admin_group }}"
+  - "!requiretty"
+  - "!visiblepw"
+  - always_set_home
+  - env_reset
+  - env_keep  = "COLORS DISPLAY HOSTNAME HISTSIZE INPUTRC KDEDIR LS_COLORS"
+  - env_keep += "MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE"
+  - env_keep += "LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES"
+  - env_keep += "LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE"
+  - env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"
+  - env_keep += "SSH_AUTH_SOCK"
+  - secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+sudo_command_aliases: []
+sudo_host_aliases: []
+sudo_user_aliases: []
+sudo_run_aliases: []

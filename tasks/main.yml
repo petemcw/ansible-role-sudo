@@ -1,0 +1,51 @@
+---
+# Defines tasks to configure Sudo
+
+- name: Gather OS specific varibles
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags:
+    - sudo
+
+- include: "{{ ansible_os_family }}/install.yml"
+  static: no
+  tags:
+    - sudo
+
+- name: Create an administrative group
+  group: >
+    name="{{ sudo_admin_group }}"
+    system=yes
+    state=present
+  tags:
+    - sudo
+
+- name: Write configuration templates
+  template: >
+    src=sudoers.j2
+    dest="{{ sudo_config_file }}"
+    mode=0440 owner=root group=root
+    validate="visudo -q -c -f %s"
+  tags:
+    - sudo
+
+- name: Ensure configuration directory
+  file: >
+    path="{{ sudo_config_path }}"
+    state=directory
+    mode=0755 owner=root group=root
+  tags:
+    - sudo
+
+- name: Write variable configuration template
+  template: >
+    src=sudoers.d.j2
+    dest="{{ sudo_config_path }}{{ item.name }}"
+    mode=0440 owner=root group=root
+    validate="visudo -q -c -f %s"
+  with_items: "{{ sudo_config_items }}"
+  tags:
+    - sudo

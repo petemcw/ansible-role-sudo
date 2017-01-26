@@ -1,0 +1,5 @@
+---
+# Defines variables for RedHat/CentOS
+
+sudo_packages:
+  - "sudo"

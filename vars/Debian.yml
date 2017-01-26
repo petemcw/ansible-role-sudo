@@ -1,0 +1,5 @@
+---
+# Defines variables for Debian/Ubuntu
+
+sudo_packages:
+  - "sudo"

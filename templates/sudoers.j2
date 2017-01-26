@@ -1,0 +1,41 @@
+# This file is under control by Ansible for {{inventory_hostname}}
+# DO NOT MODIFY by hand; update the role called: {{ role_path | basename }}
+
+## Command Aliases
+{% for command in sudo_command_aliases %}
+Cmnd_Alias {{ command.name.upper() | mandatory }} = {{ command.alias | mandatory }}
+{% endfor %}
+
+## Host Aliases
+{% for host in sudo_host_aliases %}
+Host_Alias {{ host.name.upper() | mandatory }} = {{ host.alias | mandatory }}
+{% endfor %}
+
+## User Aliases
+{% for user in sudo_user_aliases %}
+User_Alias {{ user.name.upper() | mandatory }} = {{ user.alias | mandatory }}
+{% endfor %}
+
+## Run As Aliases
+{% for runas in sudo_run_aliases %}
+Runas_Alias {{ runas.name.upper() | mandatory }} = {{ runas.alias | mandatory }}
+{% endfor %}
+
+## Defaults specification
+{% for default in sudo_defaults %}
+Defaults {{ default }}
+{% endfor %}
+
+## The COMMANDS section may have other options added to it.
+##
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+{% for user in sudo_users %}
+{{ user.name | mandatory }} {{ user.hosts | default(['ALL']) | join(',') | upper() }}=({{ user.as_users | default(['ALL']) | join(',') | upper() }}) {{ "NOPASSWD:" if (user.nopasswd is defined and user.nopasswd) else "" }}{{ user.commands | default(['ALL']) | join(',') | upper() }}
+{% endfor %}
+
+# Allow members of administrative group to execute any command
+%{{ sudo_admin_group }}   ALL=(ALL:ALL) ALL
+
+# See sudoers(5) for more information on "#include" directives:
+#includedir /etc/sudoers.d
